@@ -1,0 +1,80 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ChatLog from '@/components/ChatLog';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const chats = await getCollection('chats');
+  return chats.map((chat) => ({
+    params: { slug: chat.id.replace(/\.mdx?$/, '') },
+    props: { chat },
+  }));
+}
+
+const { chat } = Astro.props;
+const { title, date, tags, tldr, action_items } = chat.data;
+---
+
+<BaseLayout title={title}>
+  <article class="py-12">
+    {/* Header */}
+    <header class="max-w-3xl mx-auto mb-10">
+      <a href="/" class="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Timeline
+      </a>
+
+      <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-3">{title}</h1>
+
+      <div class="flex items-center gap-3 text-sm text-muted-foreground mb-4">
+        <time datetime={date.toISOString()}>
+          {date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </div>
+
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-1.5 mb-4">
+          {tags.map((tag: string) => (
+            <span class="px-2 py-0.5 rounded-full text-xs font-mono bg-muted text-muted-foreground">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {tldr && (
+        <div class="p-4 rounded-lg bg-muted/50 border border-border">
+          <p class="text-sm font-medium text-muted-foreground mb-1">TL;DR</p>
+          <p class="text-sm text-foreground">{tldr}</p>
+        </div>
+      )}
+
+      {action_items.length > 0 && (
+        <div class="mt-4 p-4 rounded-lg bg-muted/50 border border-border">
+          <p class="text-sm font-medium text-muted-foreground mb-2">Action Items</p>
+          <ul class="space-y-1.5">
+            {action_items.map((item: { task: string; done: boolean }) => (
+              <li class="flex items-start gap-2 text-sm">
+                <span class={`mt-0.5 w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${item.done ? 'bg-blue-500 border-blue-500' : 'border-border'}`}>
+                  {item.done && (
+                    <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
+                <span class={item.done ? 'text-muted-foreground line-through' : 'text-foreground'}>{item.task}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </header>
+
+    {/* Chat messages */}
+    <div class="max-w-3xl mx-auto">
+      <ChatLog client:load rawContent={chat.body ?? ''} />
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Astro build output
+dist/
+.astro/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Copilot session files
+copilot-session-*.md
+
+# Example / seed content (remove these lines to track your own content)
+src/content/chats/example-*.mdx
+src/content/plans/jpf-gsoc-mastery-plan.mdx

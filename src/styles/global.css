@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════
+   THEME TOKENS  (unlayered — highest cascade priority)
+   Everything in :root (light) and .dark (dark).
+   Toggling class="dark" on <html> switches all tokens at once.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Component palette */
+  --background:          210 25% 97%;
+  --foreground:          222 47% 10%;
+  --border:              217 28% 84%;
+  --muted:               217 28% 91%;
+  --muted-foreground:    215 20% 48%;
+  --accent:              217 28% 88%;
+  --accent-foreground:   222 47% 10%;
+  --card:                0   0% 100%;
+  --card-foreground:     222 47% 10%;
+  --user-bubble:         217 91% 50%;
+  --user-text:           0   0% 100%;
+  --ai-bubble:           217 28% 93%;
+  --ai-text:             222 47% 15%;
+
+  /* Aurora blobs */
+  --aurora-1-color:      217 88% 55%;
+  --aurora-2-color:      270 70% 58%;
+  --aurora-3-color:      245 78% 54%;
+  --aurora-opacity:      0.38;
+  --aurora-3-opacity:    0.22;
+
+  /* Hero vignette & grid */
+  --vignette-rgb:        242, 244, 252;
+  --grid-color:          0,   0,   0;
+  --grid-opacity:        0.045;
+
+  /* Hero gradient text */
+  --hero-from:           #2563eb;   /* blue-600 */
+  --hero-via:            #9333ea;   /* purple-600 */
+  --hero-to:             #7c3aed;   /* violet-600 */
+
+  /* Glass card surfaces */
+  --card-glass-bg:      rgba(255, 255, 255, 0.72);
+  --card-glass-border:  rgba(0, 0, 0, 0.08);
+
+  /* Badge */
+  --badge-text:          #1d4ed8;
+  --badge-dot:           #3b82f6;
+}
+
+.dark {
+  /* Component palette */
+  --background:          222 47%  6%;
+  --foreground:          210 40% 96%;
+  --border:              217 33% 17%;
+  --muted:               217 33% 12%;
+  --muted-foreground:    215 20% 55%;
+  --accent:              217 33% 17%;
+  --accent-foreground:   210 40% 96%;
+  --card:                222 47%  8%;
+  --card-foreground:     210 40% 96%;
+  --user-bubble:         217 91% 50%;
+  --user-text:           0   0% 100%;
+  --ai-bubble:           217 33% 14%;
+  --ai-text:             210 40% 90%;
+
+  /* Aurora blobs */
+  --aurora-1-color:      217 91% 46%;
+  --aurora-2-color:      270 68% 48%;
+  --aurora-3-color:      245 78% 52%;
+  --aurora-opacity:      0.52;
+  --aurora-3-opacity:    0.28;
+
+  /* Hero vignette & grid */
+  --vignette-rgb:        7,   9,  21;
+  --grid-color:          255, 255, 255;
+  --grid-opacity:        0.018;
+
+  /* Hero gradient text */
+  --hero-from:           #93c5fd;   /* blue-300 */
+  --hero-via:            #d8b4fe;   /* purple-300 */
+  --hero-to:             #c4b5fd;   /* violet-300 */
+
+  /* Badge */
+  --badge-text:          #93c5fd;   /* blue-300 */
+  --badge-dot:           #60a5fa;   /* blue-400 */
+
+  /* Glass card surfaces */
+  --card-glass-bg:      rgba(15, 18, 38, 0.68);
+  --card-glass-border:  rgba(255, 255, 255, 0.06);
+}
+
+/* ── Glassmorphism card ──────────────────────────────────── */
+.glass-card {
+  background: var(--card-glass-bg);
+  border: 1px solid var(--card-glass-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* ── Depth veil: fixed overlay between canvas (z:-1) and content (z:1) ── */
+/* Creates a radial fog so foreground elements read cleanly over the 3D. */
+.depth-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 85% at 50% 50%,
+    transparent 15%,
+    hsl(var(--background) / 0.18) 50%,
+    hsl(var(--background) / 0.52) 80%,
+    hsl(var(--background) / 0.80) 100%
+  );
+}
+
+/* ── Page-wide ambient aurora (fixed, behind everything) ─── */
+/* Two extra large blobs that give the whole page a glow */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  border-radius: 9999px;
+  filter: blur(110px);
+  pointer-events: none;
+  z-index: -1;
+  will-change: transform;
+}
+body::before {
+  width: 70vw; height: 70vw;
+  max-width: 900px; max-height: 900px;
+  top: -20vh; left: -15vw;
+  background: radial-gradient(circle, hsl(var(--aurora-1-color)) 0%, transparent 60%);
+  opacity: calc(var(--aurora-opacity) * 0.65);
+}
+body::after {
+  width: 60vw; height: 60vw;
+  max-width: 780px; max-height: 780px;
+  bottom: -15vh; right: -10vw;
+  background: radial-gradient(circle, hsl(var(--aurora-2-color)) 0%, transparent 60%);
+  opacity: calc(var(--aurora-opacity) * 0.65);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT STYLES (reference the tokens above)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hero gradient text — clips gradient to text shape */
+.hero-gradient-text {
+  background-image: linear-gradient(to right, var(--hero-from), var(--hero-via), var(--hero-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: block;
+  padding-bottom: 0.1em;
+}
+
+/* Eyebrow badge */
+.hero-badge {
+  color: var(--badge-text);
+}
+.hero-badge-dot {
+  background-color: var(--badge-dot);
+}
+
+/* ── Aurora blob animations ─────────────────────────────── */
+@keyframes aurora-1 {
+  0%,100% { transform: translate(0%,  0%)  scale(1);    }
+  33%      { transform: translate(8%, -6%)  scale(1.14); }
+  66%      { transform: translate(-5%, 7%)  scale(0.90); }
+}
+@keyframes aurora-2 {
+  0%,100% { transform: translate(0%,   0%) scale(1);    }
+  40%      { transform: translate(-9%,  5%) scale(1.10); }
+  70%      { transform: translate(6%, -9%)  scale(0.93); }
+}
+@keyframes aurora-3 {
+  0%,100% { transform: translate(0%,   0%) scale(1);    }
+  25%      { transform: translate(5%,  10%) scale(1.08); }
+  75%      { transform: translate(-8%, -4%) scale(0.92); }
+}
+@keyframes scroll-bounce {
+  0%,100% { transform: translateY(0);    opacity: 0.5; }
+  50%      { transform: translateY(8px); opacity: 1;   }
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  will-change: transform;
+}
+.aurora-1 {
+  width: min(55vw, 720px); height: min(55vw, 720px);
+  top: -18%; left: -8%;
+  background: radial-gradient(circle, hsl(var(--aurora-1-color)) 0%, transparent 65%);
+  opacity: var(--aurora-opacity);
+}
+.aurora-2 {
+  width: min(50vw, 660px); height: min(50vw, 660px);
+  bottom: -20%; right: -6%;
+  background: radial-gradient(circle, hsl(var(--aurora-2-color)) 0%, transparent 65%);
+  opacity: var(--aurora-opacity);
+}
+.aurora-3 {
+  width: min(40vw, 520px); height: min(40vw, 520px);
+  top: 25%; left: 50%;
+  background: radial-gradient(circle, hsl(var(--aurora-3-color)) 0%, transparent 65%);
+  opacity: var(--aurora-3-opacity);
+  filter: blur(90px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .aurora-1 { animation: aurora-1 20s ease-in-out infinite; }
+  .aurora-2 { animation: aurora-2 25s ease-in-out infinite; }
+  .aurora-3 { animation: aurora-3 17s ease-in-out infinite 4s; }
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(var(--grid-color), var(--grid-opacity)) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--grid-color), var(--grid-opacity)) 1px, transparent 1px);
+  background-size: 62px 62px;
+}
+
+.hero-vignette {
+  background: radial-gradient(
+    ellipse 88% 72% at 50% 50%,
+    transparent 0%,
+    transparent 35%,
+    rgba(var(--vignette-rgb), 0.30) 60%,
+    rgba(var(--vignette-rgb), 0.90) 100%
+  );
+}
+
+.scroll-bounce { animation: scroll-bounce 2s ease-in-out infinite; }
+
+/* ── Tailwind base layer (uses the tokens above) ─────────── */
+@layer base {
+  * { @apply border-border; }
+
+  html {
+    background-color: hsl(var(--background));
+  }
+
+  body {
+    @apply text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  ::-webkit-scrollbar       { @apply w-2; }
+  ::-webkit-scrollbar-track { @apply bg-background; }
+  ::-webkit-scrollbar-thumb { @apply bg-muted rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/30; }
+}
+

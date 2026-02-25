@@ -1,0 +1,966 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import DocCodeBlock from '@/components/DocCodeBlock.astro';
+
+const pathname = Astro.url.pathname;
+---
+
+<BaseLayout
+  title="Documentation"
+  description="Learn how to set up AI Chat Generator with the MCP server, create chat logs and study plans, and deploy your personal knowledge base."
+>
+  <div slot="hero" class="docs-root">
+    <div class="docs-layout">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="docs-sidebar" id="docs-sidebar">
+        <nav class="sidebar-nav">
+          <div class="sb-group">
+            <span class="sb-group-label">Overview</span>
+            <ul>
+              <li><a href="#introduction"    class="sb-link">Introduction</a></li>
+              <li><a href="#features"        class="sb-link">Features</a></li>
+            </ul>
+          </div>
+          <div class="sb-group">
+            <span class="sb-group-label">Getting Started</span>
+            <ul>
+              <li><a href="#prerequisites"   class="sb-link">Prerequisites</a></li>
+              <li><a href="#installation"    class="sb-link">Installation</a></li>
+              <li><a href="#structure"       class="sb-link">Project Structure</a></li>
+            </ul>
+          </div>
+          <div class="sb-group">
+            <span class="sb-group-label">MCP Server</span>
+            <ul>
+              <li><a href="#mcp-overview"    class="sb-link">Overview</a></li>
+              <li><a href="#mcp-config"      class="sb-link">Configuration</a></li>
+              <li><a href="#mcp-tools"       class="sb-link">Tools Reference</a></li>
+            </ul>
+          </div>
+          <div class="sb-group">
+            <span class="sb-group-label">Content</span>
+            <ul>
+              <li><a href="#creating-chats"  class="sb-link">Chat Sessions</a></li>
+              <li><a href="#creating-plans"  class="sb-link">Study Plans</a></li>
+              <li><a href="#inline-editing"  class="sb-link">Inline Editing</a></li>
+            </ul>
+          </div>
+          <div class="sb-group">
+            <span class="sb-group-label">Deploy</span>
+            <ul>
+              <li><a href="#deployment"      class="sb-link">Deployment</a></li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <article class="docs-article" id="docs-article">
+
+        <!-- ── Introduction ─────────────────────────────────── -->
+        <section id="introduction" class="ds">
+          <p class="ds-eyebrow">Overview</p>
+          <h1 class="ds-h1">AI Chat Generator</h1>
+          <p class="ds-lead">
+            A personal static site generator built with <strong>Astro 5</strong>, React, and
+            Tailwind CSS for archiving and displaying AI brainstorming sessions. Integrates
+            with GitHub Copilot via the <strong>Model Context Protocol</strong> so you can
+            create and manage your knowledge base without ever leaving VS Code.
+          </p>
+          <div class="hero-badge-strip">
+            <span class="hb">Astro 5</span>
+            <span class="hb">React Islands</span>
+            <span class="hb">Tailwind CSS</span>
+            <span class="hb">Three.js</span>
+            <span class="hb">MCP</span>
+            <span class="hb">MDX</span>
+          </div>
+        </section>
+
+        <!-- ── Features ─────────────────────────────────────── -->
+        <section id="features" class="ds">
+          <h2 class="ds-h2">Features</h2>
+          <div class="feat-grid">
+            <div class="feat-card">
+              <div class="feat-icon blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z"/></svg>
+              </div>
+              <h3>MCP Server</h3>
+              <p>8 Copilot tools to create, read, and manage content directly from VS Code chat.</p>
+            </div>
+            <div class="feat-card">
+              <div class="feat-icon purple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/></svg>
+              </div>
+              <h3>Inline Editing</h3>
+              <p>Edit plan milestones, tags, and content directly on the page — Notion-style.</p>
+            </div>
+            <div class="feat-card">
+              <div class="feat-icon green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+              </div>
+              <h3>Syntax Highlighting</h3>
+              <p>Shiki-powered code blocks with language detection and one-click copy.</p>
+            </div>
+            <div class="feat-card">
+              <div class="feat-icon amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+              </div>
+              <h3>Dark / Light Mode</h3>
+              <p>CSS variable theming with localStorage persistence and zero FOUC.</p>
+            </div>
+            <div class="feat-card">
+              <div class="feat-icon pink">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"/></svg>
+              </div>
+              <h3>3D Background</h3>
+              <p>Three.js wave particle field with scroll-reactive blur and mouse parallax.</p>
+            </div>
+            <div class="feat-card">
+              <div class="feat-icon indigo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 2.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
+              </div>
+              <h3>Content Collections</h3>
+              <p>Astro's type-safe MDX content collections with full Zod schema validation.</p>
+            </div>
+          </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── Prerequisites ────────────────────────────────── -->
+        <section id="prerequisites" class="ds">
+          <p class="ds-eyebrow">Getting Started</p>
+          <h2 class="ds-h2">Prerequisites</h2>
+          <p class="ds-p">Ensure these are installed before you begin:</p>
+          <ul class="prereq-list">
+            <li>
+              <span class="prereq-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <div><strong>Node.js 18+</strong> <span class="ds-muted">— runtime for Astro and the MCP server</span></div>
+            </li>
+            <li>
+              <span class="prereq-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <div><strong>VS Code</strong> <span class="ds-muted">— MCP integration is VS Code-specific</span></div>
+            </li>
+            <li>
+              <span class="prereq-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <div><strong>GitHub Copilot extension</strong> <span class="ds-muted">— orchestrates MCP tool calls via natural language</span></div>
+            </li>
+            <li>
+              <span class="prereq-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <div><strong>Git</strong> <span class="ds-muted">— for cloning the repository</span></div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Installation -->
+        <section id="installation" class="ds">
+          <h2 class="ds-h2">Installation</h2>
+
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <p class="step-title">Clone the repository</p>
+              <DocCodeBlock terminal={true} lang="bash" code={`git clone https://github.com/your-username/ai-chat-generator.git
+cd ai-chat-generator`} />
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <p class="step-title">Install dependencies</p>
+              <DocCodeBlock terminal={true} lang="bash" code={`npm install`} />
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <p class="step-title">Start the development server</p>
+              <DocCodeBlock terminal={true} lang="bash" code={`npm run dev`} />
+              <p class="ds-p" style="margin-top:0.6rem">
+                Open <code class="ic">http://localhost:4321</code> in your browser.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Project Structure ─────────────────────────────── -->
+        <section id="structure" class="ds">
+          <h2 class="ds-h2">Project Structure</h2>
+          <DocCodeBlock filename="Directory tree" lang="text" code={`ai-chat-generator/
+ src/
+   ├── components/          React islands + Astro UI
+   │   ├── ChatLog.tsx       Chat message renderer
+   │   ├── Scene3D.tsx       Three.js wave background
+   │   └── TracingBeam.tsx   Timeline component
+   ├── content/
+   │   ├── chats/            Chat session files (.mdx)
+   │   └── plans/            Study plan files   (.mdx)
+   ├── layouts/
+   │   └── BaseLayout.astro
+   ├── pages/
+ api/              API routes (plan editing)   │   
+   │   ├── chats/[slug].astro
+   │   ├── plans/[slug].astro
+   │   ├── docs.astro        This page
+   │   └── index.astro       Homepage timeline
+   └── styles/
+       └── global.css        Theme tokens + utilities
+ mcp/
+   └── server.mjs            MCP server (8 tools)
+ scripts/                  Scaffolding helpers
+ .vscode/
+   └── mcp.json              VS Code MCP configuration
+ astro.config.mjs`} />
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── MCP Overview ──────────────────────────────────── -->
+        <section id="mcp-overview" class="ds">
+          <p class="ds-eyebrow">MCP Server</p>
+          <h2 class="ds-h2">What is MCP?</h2>
+          <p class="ds-p">
+            The <strong>Model Context Protocol</strong> is an open standard that lets AI
+            assistants like GitHub Copilot call tools running in your local project. Instead
+            of switching to a terminal, you can ask Copilot to create a chat log or update
+            a milestone — and it handles the file I/O automatically.
+          </p>
+          <div class="callout callout-info">
+            <svg class="ci" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            <div>
+              <strong>No external API required.</strong> The server runs entirely on your
+              machine — your chat logs and plans stay private.
+            </div>
+          </div>
+        </section>
+
+        <!-- ── MCP Config ────────────────────────────────────── -->
+        <section id="mcp-config" class="ds">
+          <h2 class="ds-h2">Configuration</h2>
+          <p class="ds-p">
+            The server is pre-wired in <code class="ic">.vscode/mcp.json</code>. Update the
+            <code class="ic">command</code> to point to your local Node.js binary.
+          </p>
+          <DocCodeBlock filename=".vscode/mcp.json" lang="json" code={`{
+  "servers": {
+    "ai-chat-generator": {
+      "type": "stdio",
+      "command": "/home/YOU/.nvm/versions/node/v22.x.x/bin/node",
+      "args": ["/absolute/path/to/ai-chat-generator/mcp/server.mjs"],
+      "env": {}
+    }
+  }
+}`} />
+          <div class="callout callout-warn">
+            <svg class="ci" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            <div>
+              Use the <strong>absolute path</strong> to Node. VS Code spawns MCP in an isolated
+              shell where <code class="ic">nvm</code> is not loaded. Run
+              <code class="ic">which node</code> in a terminal with nvm active.
+            </div>
+          </div>
+          <p class="ds-p">Find your Node path and reload VS Code:</p>
+          <DocCodeBlock terminal={true} lang="bash" code={`which node
+# /home/you/.nvm/versions/node/v22.21.1/bin/node
+
+# Then reload VS Code (Ctrl+Shift+P > "Developer: Reload Window")`} />
+          <p class="ds-p">Optional shell alias for quick restarts:</p>
+          <DocCodeBlock terminal={true} lang="bash" code={`# ~/.bashrc or ~/.zshrc
+alias mcp-reload='code --command workbench.action.reloadWindow'`} />
+        </section>
+
+        <!-- ── MCP Tools ─────────────────────────────────────── -->
+        <section id="mcp-tools" class="ds">
+          <h2 class="ds-h2">Tools Reference</h2>
+          <p class="ds-p">The MCP server exposes eight tools to GitHub Copilot:</p>
+          <div class="tools-grid">
+            <div class="tool-card">
+              <code class="tool-name">create_chat</code>
+              <p>Creates a new MDX chat session file with frontmatter scaffolding.</p>
+              <span class="tool-params">title, tags?, tldr?, messages?</span>
+            </div>
+            <div class="tool-card">
+              <code class="tool-name">add_message</code>
+              <p>Appends a user or AI message block to an existing chat file.</p>
+              <span class="tool-params">filename, role, content</span>
+            </div>
+            <div class="tool-card">
+              <code class="tool-name">list_entries</code>
+              <p>Lists all chats and/or plans with titles, dates and tags.</p>
+              <span class="tool-params">collection? (all|chats|plans)</span>
+            </div>
+            <div class="tool-card">
+              <code class="tool-name">get_entry</code>
+              <p>Reads the full MDX content of a specific chat or plan.</p>
+              <span class="tool-params">collection, filename</span>
+            </div>
+            <div class="tool-card">
+              <code class="tool-name">create_plan</code>
+              <p>Creates a new study/work plan MDX file with milestone scaffolding.</p>
+              <span class="tool-params">title, tags?, body, milestones?</span>
+            </div>
+            <div class="tool-card">
+              <code class="tool-name">update_frontmatter</code>
+              <p>Updates YAML frontmatter fields of any chat or plan file.</p>
+              <span class="tool-params">collection, filename, fields</span>
+            </div>
+            <div class="tool-card">
+              <code class="tool-name">build_site</code>
+              <p>Runs <code class="ic">npm run build</code> to generate the static site.</p>
+              <span class="tool-params">— (no parameters)</span>
+            </div>
+            <div class="tool-card">
+              <code class="tool-name">delete_entry</code>
+              <p>Permanently deletes a chat or plan MDX file from disk.</p>
+              <span class="tool-params">collection, filename</span>
+            </div>
+          </div>
+          <p class="ds-p" style="margin-top:1.5rem">Example Copilot prompts:</p>
+          <DocCodeBlock terminal={false} filename="VS Code Copilot Chat" lang="text" code={`"Create a new chat log titled 'React performance deep-dive' with tags [react, perf]"
+
+"List all my study plans"
+
+"Mark the first milestone in My-Plan-plan.mdx as complete"
+
+"Build the site"`} />
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── Sessions Chat --> ────────
+        <section id="creating-chats" class="ds">
+          <p class="ds-eyebrow">Working with Content</p>
+          <h2 class="ds-h2">Chat Sessions</h2>
+          <p class="ds-p">
+            Chat sessions live in <code class="ic">src/content/chats/</code> as MDX files.
+            Each file has YAML frontmatter for metadata and an MDX body for the conversation.
+          </p>
+          <h3 class="ds-h3">Create via CLI</h3>
+          <DocCodeBlock terminal={true} lang="bash" code={`npm run new-chat -- "My Brainstorming Session"
+# Creates: src/content/chats/2026-02-25-my-brainstorming-session.mdx`} />
+          <h3 class="ds-h3">Create via Copilot</h3>
+          <div class="callout callout-example">
+            <svg class="ci" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.275 2.903 2.875 2.903h9.75c1.6 0 2.875-1.303 2.875-2.903V6.75c0-1.6-1.275-2.903-2.875-2.903H5.625c-1.6 0-2.875 1.303-2.875 2.903v5.01z"/></svg>
+            <em>"Create a new chat log titled 'Rust ownership model' with tags [rust, systems]"</em>
+          </div>
+          <h3 class="ds-h3">Frontmatter schema</h3>
+          <DocCodeBlock filename="src/content/chats/example.mdx" lang="yaml" code={`---
+title: "My Chat Session"
+date: 2026-02-25
+tags: ["ai", "brainstorm"]
+tldr: "One-line summary of the session"
+action_items:
+  - task: "Implement feature X"
+    done: false
+  - task: "Review PR #42"
+    done: true
+---`} />
+        </section>
+
+        <!-- ── Plans Study --> ────────────────────────────────────
+        <section id="creating-plans" class="ds">
+          <h2 class="ds-h2">Study Plans</h2>
+          <p class="ds-p">
+            Plans live in <code class="ic">src/content/plans/</code> and include structured
+            milestone tracking. They are fully editable in the browser.
+          </p>
+          <h3 class="ds-h3">Create via CLI</h3>
+          <DocCodeBlock terminal={true} lang="bash" code={`npm run new-plan -- "GSoC Preparation Plan"
+# Creates: src/content/plans/2026-02-25-gsoc-preparation-plan.mdx`} />
+          <h3 class="ds-h3">Frontmatter schema</h3>
+          <DocCodeBlock filename="src/content/plans/example.mdx" lang="yaml" code={`---
+title: "My Study Plan"
+date: 2026-02-25
+tags: ["java", "gsoc"]
+tldr: "3-month plan to master JPF"
+difficulty: "intermediate"   # beginner | intermediate | advanced
+duration: "3 months (Aug-Oct)"
+milestones:
+  - title: "Foundations"
+    weeks: "Weeks 1-4"
+    status: "not-started"    # not-started | in-progress | complete
+  - title: "Advanced Topics"
+    weeks: "Weeks 5-8"
+    status: "not-started"
+---
+
+## Overview
+Write your plan body here in Markdown.`} />
+        </section>
+
+        <!-- ── Inline Editing ────────────────────────────────── -->
+        <section id="inline-editing" class="ds">
+          <h2 class="ds-h2">Inline Editing</h2>
+          <p class="ds-p">
+            Navigate to any plan page (<code class="ic">/plans/slug</code>) and click the
+            <strong>Edit</strong> button in the top-right corner. This activates Notion-style
+            inline editing:
+          </p>
+          <ul class="ds-list">
+            <li>Click the <strong>title</strong> to rename the plan</li>
+            <li>Click any <strong>tag</strong> to edit it, or add new ones</li>
+            <li>Toggle <strong>milestone status</strong> between not-started / in-progress / complete</li>
+            <li>Edit the <strong>body content</strong> in a live markdown textarea</li>
+          </ul>
+          <p class="ds-p">
+            Changes are auto-saved via <code class="ic">POST /api/update-plan</code> and
+            written directly to the MDX file on disk.
+          </p>
+          <div class="callout callout-info">
+            <svg class="ci" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            <div>
+              The editing API requires a running Node.js server (<code class="ic">@astrojs/node</code>
+              adapter). Use <code class="ic">npm run dev</code> for local editing, then
+              rebuild and redeploy after changes.
+            </div>
+          </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── Deployment ────────────────────────────────────── -->
+        <section id="deployment" class="ds">
+          <p class="ds-eyebrow">Deploy</p>
+          <h2 class="ds-h2">Deployment</h2>
+          <p class="ds-p">Build the production-ready static site:</p>
+          <DocCodeBlock terminal={true} lang="bash" code={`npm run build
+# Output written to dist/`} />
+          <p class="ds-p">
+            Deploy to any Node.js-compatible host. The <code class="ic">@astrojs/node</code>
+            adapter is required for the inline editing API:
+          </p>
+          <div class="deploy-grid">
+            <a href="https://vercel.com"  target="_blank" rel="noopener" class="deploy-card">
+              <span class="deploy-name">Vercel</span>
+              <span class="deploy-badge">Recommended</span>
+            </a>
+            <a href="https://railway.app" target="_blank" rel="noopener" class="deploy-card">
+              <span class="deploy-name">Railway</span>
+            </a>
+            <a href="https://fly.io"      target="_blank" rel="noopener" class="deploy-card">
+              <span class="deploy-name">Fly.io</span>
+            </a>
+            <a href="https://render.com"  target="_blank" rel="noopener" class="deploy-card">
+              <span class="deploy-name">Render</span>
+            </a>
+          </div>
+          <div class="callout callout-info" style="margin-top:1.5rem">
+            <svg class="ci" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            <div>
+              For a fully static build (no inline editing), remove the adapter and set
+              <code class="ic">output: 'static'</code> in <code class="ic">astro.config.mjs</code>.
+              Deploy to GitHub Pages, Netlify, or any CDN.
+            </div>
+          </div>
+        </section>
+
+        <!-- bottom nav -->
+        <div class="docs-bottom-nav">
+          <div></div>
+          <a href="/" class="docs-next">
+            Back to Timeline
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- RIGHT TOC -->
+      <aside class="docs-toc">
+        <div class="toc-inner">
+          <p class="toc-label">On this page</p>
+          <ul class="toc-list">
+            <li><a href="#introduction"   class="toc-link">Introduction</a></li>
+            <li><a href="#features"       class="toc-link">Features</a></li>
+            <li class="toc-sep">Getting Started</li>
+            <li><a href="#prerequisites"  class="toc-link toc-sub">Prerequisites</a></li>
+            <li><a href="#installation"   class="toc-link toc-sub">Installation</a></li>
+            <li><a href="#structure"      class="toc-link toc-sub">Project Structure</a></li>
+            <li class="toc-sep">MCP Server</li>
+            <li><a href="#mcp-overview"   class="toc-link toc-sub">Overview</a></li>
+            <li><a href="#mcp-config"     class="toc-link toc-sub">Configuration</a></li>
+            <li><a href="#mcp-tools"      class="toc-link toc-sub">Tools Reference</a></li>
+            <li class="toc-sep">Content</li>
+            <li><a href="#creating-chats" class="toc-link toc-sub">Chat Sessions</a></li>
+            <li><a href="#creating-plans" class="toc-link toc-sub">Study Plans</a></li>
+            <li><a href="#inline-editing" class="toc-link toc-sub">Inline Editing</a></li>
+            <li class="toc-sep">Deploy</li>
+            <li><a href="#deployment"     class="toc-link toc-sub">Deployment</a></li>
+          </ul>
+        </div>
+      </aside>
+
+    </div><!-- /docs-layout -->
+  </div><!-- /docs-root -->
+</BaseLayout>
+
+<style is:global>
+/* ================================================================
+   DOCS PAGE LAYOUT
+   ================================================================ */
+.docs-root {
+  min-height: calc(100vh - 3.5rem);
+  padding: 0 0 5rem;
+}
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0,1fr) 200px;
+  gap: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  align-items: start;
+}
+
+/* LEFT SIDEBAR */
+.docs-sidebar {
+  position: sticky;
+  top: 3.75rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  padding: 2rem 1rem 2rem 0;
+  border-right: 1px solid hsl(var(--border) / 0.6);
+  scrollbar-width: thin;
+}
+
+.sidebar-nav { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.sb-group { display: flex; flex-direction: column; gap: 0.2rem; }
+.sb-group-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(var(--muted-foreground));
+  padding: 0 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.sb-group ul { list-style: none; margin: 0; padding: 0; }
+.sb-link {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+.sb-link:hover,
+.sb-link.active {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted) / 0.5);
+  border-left-color: hsl(217 91% 60%);
+}
+
+/* MAIN ARTICLE */
+.docs-article {
+  padding: 2rem 3rem 2rem 2.5rem;
+  min-width: 0;
+}
+
+/* RIGHT TOC */
+.docs-toc {
+  position: sticky;
+  top: 3.75rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  padding: 2rem 0 2rem 1rem;
+  border-left: 1px solid hsl(var(--border) / 0.6);
+  scrollbar-width: thin;
+}
+
+.toc-inner { padding: 0; }
+.toc-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 0.5rem;
+}
+.toc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+.toc-sep  { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: hsl(var(--muted-foreground) / 0.6); padding: 0.7rem 0 0.2rem 0.4rem; }
+.toc-link {
+  display: block;
+  padding: 0.28rem 0.4rem;
+  border-radius: 5px;
+  font-size: 12.5px;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  transition: all 0.13s;
+}
+.toc-sub  { padding-left: 0.85rem; }
+.toc-link:hover,
+.toc-link.active {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted) / 0.5);
+}
+.toc-link.active { color: hsl(217 91% 60%); }
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 1180px) {
+  .docs-layout { grid-template-columns: 220px minmax(0,1fr); }
+  .docs-toc     { display: none; }
+  .docs-article { padding: 2rem 1.5rem 2rem 2rem; }
+}
+@media (max-width: 768px) {
+  .docs-layout  { grid-template-columns: 1fr; }
+  .docs-sidebar { display: none; }
+  .docs-article { padding: 1.5rem 1rem; }
+}
+
+/* ================================================================
+   SECTION TYPOGRAPHY
+   ================================================================ */
+.ds { margin-bottom: 3rem; }
+.ds-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: hsl(217 91% 60%);
+  margin: 0 0 0.5rem;
+}
+.ds-h1 {
+  font-size: clamp(1.9rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: hsl(var(--foreground));
+  margin: 0 0 1rem;
+  line-height: 1.15;
+}
+.ds-h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: hsl(var(--foreground));
+  margin: 0 0 0.9rem;
+  padding-top: 0.1rem;
+}
+.ds-h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 1.5rem 0 0.4rem;
+}
+.ds-lead {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: hsl(var(--muted-foreground));
+  max-width: 680px;
+  margin: 0 0 1.5rem;
+}
+.ds-p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: hsl(var(--muted-foreground));
+  margin: 0.6rem 0;
+}
+.ds-muted { color: hsl(var(--muted-foreground)); }
+.ds-divider {
+  border: none;
+  border-top: 1px solid hsl(var(--border) / 0.6);
+  margin: 0 0 3rem;
+}
+
+/* ================================================================
+   INLINE CODE
+   ================================================================ */
+.ic {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.81em;
+  padding: 0.13em 0.42em;
+  border-radius: 5px;
+  background: hsl(var(--muted));
+  color: hsl(217 91% 65%);
+  border: 1px solid hsl(var(--border) / 0.8);
+}
+
+/* ================================================================
+   HERO BADGES
+   ================================================================ */
+.hero-badge-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.hb {
+  font-size: 11.5px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.5);
+  color: hsl(var(--muted-foreground));
+}
+
+/* ================================================================
+   FEATURES GRID
+   ================================================================ */
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.feat-card {
+  padding: 1.1rem 1.2rem 1.3rem;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--border) / 0.8);
+  background: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.feat-card:hover {
+  border-color: hsl(217 91% 60% / 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+.feat-card h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0.6rem 0 0.3rem;
+}
+.feat-card p {
+  font-size: 0.825rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+.feat-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.feat-icon.blue   { background: rgba(59,130,246,0.12);  color: #60a5fa; }
+.feat-icon.purple { background: rgba(139,92,246,0.12);  color: #a78bfa; }
+.feat-icon.green  { background: rgba(16,185,129,0.12);  color: #34d399; }
+.feat-icon.amber  { background: rgba(245,158,11,0.12);  color: #fbbf24; }
+.feat-icon.pink   { background: rgba(236,72,153,0.12);  color: #f472b6; }
+.feat-icon.indigo { background: rgba(99,102,241,0.12);  color: #818cf8; }
+
+/* ================================================================
+   PREREQUISITES
+   ================================================================ */
+.prereq-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.prereq-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.prereq-check {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(52,211,153,0.15);
+  color: #34d399;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+
+/* ================================================================
+   STEPS
+   ================================================================ */
+.step {
+  display: flex;
+  gap: 1.1rem;
+  margin-bottom: 1.75rem;
+  align-items: flex-start;
+}
+.step-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(217 91% 50%), hsl(270 68% 52%));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 12px rgba(99,102,241,0.35);
+  margin-top: 0.1rem;
+}
+.step-body { flex: 1; min-width: 0; }
+.step-title {
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0.2rem 0 0;
+}
+
+/* ================================================================
+   CALLOUTS
+   ================================================================ */
+.callout {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.callout-info    { background: rgba(59,130,246,0.07);  border-color: rgba(59,130,246,0.22);  color: hsl(var(--foreground)); }
+.callout-warn    { background: rgba(245,158,11,0.07);  border-color: rgba(245,158,11,0.22);  color: hsl(var(--foreground)); }
+.callout-example { background: rgba(99,102,241,0.07);  border-color: rgba(99,102,241,0.22);  color: hsl(var(--muted-foreground)); font-style: italic; }
+.callout-info .ci    { color: #60a5fa; flex-shrink: 0; margin-top: 2px; }
+.callout-warn .ci    { color: #fbbf24; flex-shrink: 0; margin-top: 2px; }
+.callout-example .ci { color: #818cf8; flex-shrink: 0; margin-top: 2px; }
+
+/* ================================================================
+   MCP TOOLS GRID
+   ================================================================ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.75rem;
+}
+.tool-card {
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid hsl(var(--border) / 0.7);
+  background: hsl(var(--muted) / 0.25);
+  transition: border-color 0.2s, background 0.2s;
+}
+.tool-card:hover {
+  border-color: hsl(217 91% 60% / 0.35);
+  background: hsl(var(--muted) / 0.4);
+}
+.tool-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: hsl(217 91% 65%);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.tool-card p {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 0.5rem;
+}
+.tool-params {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: hsl(var(--muted-foreground) / 0.6);
+  display: block;
+}
+
+/* ================================================================
+   DOCS LIST
+   ================================================================ */
+.ds-list {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.ds-list li {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ================================================================
+   DEPLOY GRID
+   ================================================================ */
+.deploy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.deploy-card {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid hsl(var(--border) / 0.8);
+  background: hsl(var(--muted) / 0.25);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: all 0.2s;
+}
+.deploy-card:hover {
+  border-color: hsl(217 91% 60% / 0.4);
+  background: hsl(var(--muted) / 0.5);
+  transform: translateY(-1px);
+}
+.deploy-name  { font-size: 0.9rem; font-weight: 600; color: hsl(var(--foreground)); }
+.deploy-badge { font-size: 10px; color: #34d399; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ================================================================
+   BOTTOM NAV
+   ================================================================ */
+.docs-bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid hsl(var(--border) / 0.6);
+}
+.docs-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.3);
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.docs-next:hover {
+  border-color: hsl(217 91% 60% / 0.5);
+  background: hsl(217 91% 60% / 0.08);
+  gap: 0.6rem;
+}
+</style>
+
+<script>
+  /* Sidebar + TOC active link on scroll */
+  const sections = document.querySelectorAll('.ds[id]');
+  const allLinks = document.querySelectorAll('.sb-link, .toc-link');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          allLinks.forEach((a) => {
+            const href = (a as HTMLAnchorElement).getAttribute('href');
+            a.classList.toggle('active', href === '#' + id);
+          });
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
+  );
+
+  sections.forEach((s) => observer.observe(s));
+</script>

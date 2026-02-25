@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "ai-chat-generator": {
+      "type": "stdio",
+      "command": "/home/ahmedashour/.nvm/versions/node/v22.21.1/bin/node",
+      "args": ["/home/ahmedashour/Desktop/AI-Chat-Generator/mcp/server.mjs"]
+    }
+  }
+}

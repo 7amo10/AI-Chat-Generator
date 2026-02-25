@@ -1,0 +1,48 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import EditablePlan from '@/components/EditablePlan';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const plans = await getCollection('plans');
+  return plans.map((plan) => ({
+    params: { slug: plan.id.replace(/\.mdx?$/, '') },
+    props: { plan },
+  }));
+}
+
+const { plan } = Astro.props;
+const { title, date, tags, tldr, duration, difficulty, milestones } = plan.data;
+const filename = plan.id.endsWith('.mdx') ? plan.id : `${plan.id}.mdx`;
+---
+
+<BaseLayout title={title}>
+  <article class="py-12">
+    <div class="max-w-3xl mx-auto px-4">
+      <a
+        href="/"
+        class="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Timeline
+      </a>
+    </div>
+
+    <EditablePlan
+      client:load
+      filename={filename}
+      initialTitle={title}
+      initialDate={date.toISOString().split('T')[0]}
+      initialTags={tags}
+      initialTldr={tldr ?? ''}
+      initialDuration={duration ?? ''}
+      initialDifficulty={difficulty ?? 'intermediate'}
+      initialMilestones={milestones ?? []}
+      initialBody={plan.body ?? ''}
+    />
+  </article>
+</BaseLayout>

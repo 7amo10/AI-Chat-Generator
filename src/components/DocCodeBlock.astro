@@ -1,0 +1,112 @@
+---
+import { Code } from 'astro/components';
+interface Props {
+  code: string;
+  lang?: string;
+  filename?: string;
+  terminal?: boolean;
+}
+const { code, lang = 'bash', filename, terminal = false } = Astro.props;
+---
+<div class="dcb">
+  <div class="dcb-header">
+    {terminal ? (
+      <div class="dcb-dots">
+        <span class="dcb-dot" style="background:#ff5f57" />
+        <span class="dcb-dot" style="background:#ffbd2e" />
+        <span class="dcb-dot" style="background:#28c840" />
+      </div>
+    ) : filename ? (
+      <span class="dcb-filename">{filename}</span>
+    ) : (
+      <span class="dcb-lang">{lang}</span>
+    )}
+    <button class="dcb-copy" type="button" aria-label="Copy code">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <rect x="9" y="9" width="13" height="13" rx="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      <span class="dcb-label">Copy</span>
+    </button>
+  </div>
+  <div class="dcb-body">
+    <Code code={code} lang={lang} theme="github-dark" />
+  </div>
+</div>
+
+<style>
+  .dcb {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.07);
+    margin: 1.25rem 0;
+    background: #0d1117;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .dcb-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+    background: rgba(255,255,255,0.025);
+  }
+  .dcb-dots { display: flex; gap: 6px; align-items: center; }
+  .dcb-dot  { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .dcb-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.42);
+  }
+  .dcb-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.28);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .dcb-copy {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.09);
+    background: transparent;
+    color: rgba(255,255,255,0.38);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .dcb-copy:hover {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.72);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .dcb-copy.ok { color: #34d399; border-color: rgba(52,211,153,0.25); }
+  .dcb-body :global(pre) {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    padding: 1.1rem 1.25rem !important;
+    font-size: 13px !important;
+    line-height: 1.72 !important;
+    overflow-x: auto;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.dcb-copy').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const el = btn.closest('.dcb')?.querySelector('code');
+      navigator.clipboard.writeText(el?.textContent ?? '').then(() => {
+        const lbl = btn.querySelector('.dcb-label');
+        if (!lbl) return;
+        btn.classList.add('ok');
+        lbl.textContent = 'Copied!';
+        setTimeout(() => { btn.classList.remove('ok'); lbl.textContent = 'Copy'; }, 2000);
+      });
+    });
+  });
+</script>
